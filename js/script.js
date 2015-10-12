@@ -175,7 +175,6 @@ function Game () {
 Game.prototype.start = function(s) {  //create model of the square field , s - side of the square
     this.modelArr = [];
     this.size = s;
-    var self = this;
     for (var i=0; i<this.size; i++) {
         var t = [];
         for (var j=0; j<this.size; j++){
@@ -183,20 +182,19 @@ Game.prototype.start = function(s) {  //create model of the square field , s - s
         }
         this.modelArr.push(t);
     }
-    self.arrangeMines();
+    this.arrangeMines();
 };
 
 Game.prototype.arrangeMines = function () {
     var z = 0,
         x = 0,
-        y = 0,
-        self = this;
+        y = 0;
     while (z < this.size) {  // Suppose, the number of bombs = size
-        x = self.getRand(0, this.size - 1);
-        y = self.getRand(0, this.size - 1);
-        if (!self.isBomb(y,x))  {
+        x = this.getRand(0, this.size - 1);
+        y = this.getRand(0, this.size - 1);
+        if (!this.isBomb(y,x))  {
             this.modelArr[y][x][0] = 10;
-            self.arrangeNumbers(y,x);
+            this.arrangeNumbers(y,x);
             z++;
         }
     }
@@ -236,15 +234,14 @@ Game.prototype.arrangeNumbers = function (y,x) {
             y : -1
         }
     ];
-    var self = this,
-        siblingsLength = siblings.length;
+    var siblingsLength = siblings.length;
     for (var i = 0; i < siblingsLength; i++) {
         var obj = siblings[i];
         if ( (y + obj.y) < this.modelArr.length &&
         (x + obj.x) < this.modelArr.length &&
         (y + obj.y > -1) &&
         (x + obj.x > -1) &&
-        (!self.isBomb(y + obj.y, x + obj.x)) ) {
+        (!this.isBomb(y + obj.y, x + obj.x)) ) {
             this.modelArr[y + obj.y][x + obj.x][0]++;
         }
     }
@@ -279,24 +276,23 @@ Game.prototype.findAllBombs = function () {
     }
 };
 Game.prototype.onCellClick = function (x, y, modelArr) {
-    var self = this,
-        numberOfMineBeside = null;
+    var numberOfMineBeside = null;
     this.modelArr = modelArr;
-    if ((self.isBomb(x, y)) && (!self.isFlag(x, y))) {
+    if ((this.isBomb(x, y)) && (!this.isFlag(x, y))) {
         this.drawer.showBomb(x, y);
-        self.findAllBombs();
+        this.findAllBombs();
         alert ('You luse!');
 
-    } else if ((self.isNumber(x, y)) && (!self.isFlag(x, y))) {
+    } else if ((this.isNumber(x, y)) && (!this.isFlag(x, y))) {
         numberOfMineBeside = this.modelArr[x][y][0];
         this.drawer.showNumber(x,y,this.modelArr,numberOfMineBeside);
         this.modelArr[x][y][1] = 'open';
 
-    } else if (!self.isFlag(x, y)) {
+    } else if (!this.isFlag(x, y)) {
         this.drawer.showBlank(x,y,this.modelArr);
         this.modelArr[x][y][1] = 'open';
     }
-    if (self.isWin(this.modelArr)) {
+    if (this.isWin(this.modelArr)) {
         alert('You Win!!!');
     }
 };
